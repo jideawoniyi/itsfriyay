@@ -1,0 +1,319 @@
+/* Reset styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Global styles */
+  body {
+    font-family: sans-serif;
+    /* background-color: #fff; */
+    background-color: rgb(44, 46, 49);
+  }
+  
+  a {
+    text-decoration: none;
+    /* color: #0070c9; */
+    color: white;
+  }
+  
+  a:hover {
+    color: #005080;
+  }
+  
+  /* Header styles */
+  header {
+    position: -webkit-sticky;
+    background-color: #0070c9;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    max-width: 100%;
+  }
+  
+  header ul {
+    display: flex;
+    list-style: none;
+  }
+  
+  header ul li {
+    margin-left: 1rem;
+  }
+  
+  /* Message styles */
+  .message {
+    padding: 1rem;
+    border-radius: none;
+  }
+  
+  .message.success {
+    background-color: #dff0d8;
+    border: 1px solid #3c763d;
+    color: #3c763d;
+  }
+  
+  .message.error {
+    background-color: #f2dede;
+    border: none;
+    color: #a94442;
+    text-align: center;
+  }
+  
+  /* Form styles */
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  form input[type="email"],
+  form input[type="text"],
+  form input[type="password"] {
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  
+  form input[type="submit"] {
+    background-color: #0070c9;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  form input[type="submit"]:hover {
+    background-color: #005080;
+  }
+  
+  /* Dashboard styles */
+  .dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
+    max-width: 800px;
+  }
+  
+  .dashboard h1 {
+    color: #0070c9;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard p {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard a {
+    font-size: 1.25rem;
+    color: #ebf2f8;
+    text-decoration: none;
+  }
+  
+  .dashboard a:hover {
+    color: #005080;
+  }
+  
+  .titles{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    color: rgb(241, 238, 238);
+  }
+  
+  input[type="submit"][disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    /* Add your desired styles for the disabled button here /
+    cursor: not-allowed; / Changes the cursor to indicate the button is not clickable /
+    opacity: 0.5; / Dim the button */
+    }
+
+
+    .uneditable {
+        background-color: #ccc;
+        cursor: not-allowed;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-family: 'Lato', sans-serif;
+            padding: 1rem 2rem !important;
+            }
+            
+            th,
+            td {
+            padding: 0.3rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            
+            th {
+            font-weight: bold;
+            }
+            
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+              }
+
+            .pagination {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: black;
+                z-index: 1000;
+              }
+          
+              .callout-info{
+                margin-top: 5px;
+                margin-bottom: 10px;
+                margin-left: 2rem;
+                width: 30%;
+                height: 40%;
+                background-color: #0070c9;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                padding: 1rem 2rem;
+                /* padding: 1rem 2rem; */
+              }
+               
+              .flexitems {
+                align-self: center;
+                margin-right: 3rem;
+              }
+
+              .bg-success {
+                background-color: rgb(44, 65, 16) !important;
+                color: white;
+                border-left: 10px solid rgb(33, 148, 62);
+              }
+              
+              .bg-info {
+                background-color: #091c2c !important;
+                color:black;
+                border-left: 10px solid rgb(4, 27, 91);
+              }
+              
+              .bg-warning {
+                background-color: darkorange;
+                color:black;
+                border-left: 10px solid rgb(66, 41, 10);
+              }
+
+
+              .callout {
+                position: relative;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+              }
+
+              ul a{
+                text-decoration: none;
+                color: white;
+              }
+
+              ul a:hover{
+                text-decoration: none;
+              }
+              
+              .fa-user {
+                color: grey;
+                margin-left: 500px;
+              }
+
+              /* .flame-spiral {
+                background-image: radial-gradient(circle at 50% 50%, #ff0000, #ff7700, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+                background-size: 400%;
+                animation: flame-spiral 8s linear infinite;
+              }
+              
+              @keyframes flame-spiral {
+                0% {
+                  background-position: 0% 50%;
+                }
+                50% {
+                  background-position: 100% 50%;
+                }
+                100% {
+                  background-position: 0% 50%;
+                }
+              }
+              
+               */
+
+              .accordion-grid{
+                display: flex;
+                flex-wrap: wrap;
+                grid-gap: 40px;
+                justify-content: space-between;
+                align-items: center;
+              }
+              
+              .accordion-item {
+                display: flex;
+                flex: 1;
+                min-width: 400px;
+                align-items: flex-start;
+                justify-content: flex-start;
+              }
+              
+              .mainflex{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+              } 
+              
+              @media only screen and (min-width: 1200px) {
+                /* Display 3 columns on desktop and larger screens */
+                .accordion-grid .accordion-item {
+                  width: calc(100% / 3);
+                }
+              }
+
+              
+              @media only screen and (min-width: 768px) and (max-width: 1199px) {
+                /* Display 2 columns on iPad and smaller desktop screens */
+                .accordion-grid .accordion-item {
+                  width: calc(100% / 2);
+                }
+              }
+              
+              @media only screen and (max-width: 767px) {
+                /* Display 1 column on mobile devices */
+                .accordion-grid .accordion-item {
+                  width: 100%;
+                }
+
+                .inner-flex {
+                  flex-direction: column;
+                }
+              }
+              
+            
+              
+              

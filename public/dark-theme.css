@@ -1,0 +1,24 @@
+/* Dark theme styles */
+.dark-theme {
+    /* Set the background color to a dark color */
+    background-color: #333;
+  
+    /* Set text colors to light colors */
+    color: #fff;
+    }
+    /* Set link colors to a light color */
+    a {
+      color: #ccc;
+    }
+  
+    /* Set the color of the navbar to a dark color */
+    .navbar {
+      background-color: #222;
+    }
+  
+    /* Set the color of the active navbar link to a light color */
+    .navbar .nav-link.active {
+      color: #fff;
+    }
+  
+  
