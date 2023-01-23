@@ -20,5 +20,10 @@
     .navbar .nav-link.active {
       color: #fff;
     }
-  
+
+
+  form input[type="text"],
+  form input[type="password"] {
+    border-radius: 10px !important;
+  }
   

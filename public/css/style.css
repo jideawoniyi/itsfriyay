@@ -261,9 +261,39 @@
                 100% {
                   background-position: 0% 50%;
                 }
+              } */
+              /* .flame-spiral {
+                background-image: radial-gradient(circle at 50% 50%, #ffa07a, #ff7f50, #ff6347, #ff4500, #ffa07a, #ff7f50, #ff6347);
+                background-size: 200%;
+                animation: flame-spiral 15s ease-in-out infinite;
+            }
+            
+            @keyframes flame-spiral {
+                0% {
+                    background-position: 0% 0%;
+                }
+                100% {
+                    background-position: 200% 0%;
+                }
+            } */
+
+            .smoke-animation {
+              background-image: radial-gradient(circle at 50% 50%, #ccc, #777, #ccc);
+              background-size: 200%;
+              animation: smoke 30s ease-in-out infinite;
+          }
+          
+          @keyframes smoke {
+              0% {
+                  background-position: 0% 0%;
               }
+              100% {
+                  background-position: 0% 100%;
+              }
+          }
+          
+            
               
-               */
 
               .accordion-grid{
                 display: flex;

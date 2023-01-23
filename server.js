@@ -75,6 +75,7 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
@@ -85,7 +86,7 @@ app.set('view engine', 'ejs');
 
 //Login route
 
-  app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
     // check if user is logged in
     if (!req.session.user) {
       res.render('login', { message: req.flash('error'), messageType: 'error', user: req.user });
@@ -95,14 +96,14 @@ app.set('view engine', 'ejs');
 });
 
 // Add a check to ensure that the user's email is verified before allowing them to log in
-app.post('/', (req, res, next) => {
+app.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
   if (err) {
   return res.render('register', { message: err.message, messageType: 'error', user: req.user });
   }
   if (!user) {
   req.flash('error', 'Invalid email or password');
-  return res.redirect('/');
+  return res.redirect('/login');
   }
   if (!user.emailVerified) {
   req.flash('error', 'Please verify your email before logging in');
@@ -127,6 +128,10 @@ app.post('/', (req, res, next) => {
   }); 
 
 
+  app.get('/home', (req, res) => {
+    res.render('home');
+  });
+  
 
   app.get('/register', (req, res) => {
     res.render('register', { message: req.flash('error'), user: req.user });
@@ -177,14 +182,14 @@ res.redirect('/verify-email');
 
 
   // POST route for login
-  app.post('/', (req, res, next) => {
+  app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
     if (err) {
     return res.render('register', { message: err.message, messageType: 'error', user: req.user });
     }
     if (!user) {
     req.flash('error', 'Invalid email or password');
-    return res.redirect('/');
+    return res.redirect('/login');
     }
     req.logIn(user, (err) => {
     if (err) {
@@ -208,7 +213,7 @@ res.redirect('/verify-email');
     app.get('/chat', (req, res) => {
       // check if user is logged in
       if (!req.user) {
-          res.redirect('/');
+          res.redirect('/login');
       } else {
           res.render('chat');
           io.on('connection', (socket) => {
@@ -218,9 +223,9 @@ res.redirect('/verify-email');
   });
 
 
-  
-  // console.log(process.env.GMAIL_USER);
-  // console.log(process.env.GMAIL_PASSWORD);
+
+// console.log(process.env.GMAIL_USER);
+// console.log(process.env.GMAIL_PASSWORD);
 // Send the verification email
 function sendVerificationEmail(email, username) {
   const verificationLink = `http://localhost:3000/verify-email/${username}`;
@@ -573,36 +578,54 @@ app.get('/search', isLoggedIn,async (req, res) => {
     console.error(error);
   }
 });
-
 app.get('/fundwallet', isLoggedIn, (req, res) => {
-  res.render('fundwallet', { user: req.user, walletId: req.user.wallet.Id,message:'' });
-});
+  res.render('fundwallet', { user: req.user, walletId: req.user.wallet.Id, message:'' });
+  });
+  
+  app.post('/fundwallet', isLoggedIn, async (req, res) => {
+    try {
+      const walletId = req.body.walletId;
+      var amount = req.body.amount;
+     
+      const user = await User.findOne({ 'wallet.id': walletId });
+      if (!user) {
+        return res.json({ success: false, message: 'Invalid wallet id' });
+      }
+      amount = Number(amount);
+      user.wallet.balance = parseFloat(user.wallet.balance) + amount;
+      console.log( `the new balance is: ${user.wallet.balance}`);
+      user.wallet.isActive = true;
+      await user.save();
+      // res.json({ success: true, message: 'Wallet funded successfully' });
+      res.send(`
+      <head>
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+      <!-- Bootstrap JavaScript -->
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    </head>
+    <div class="container mt-5">
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
+Wallet funded successfully. Your new balance is: ${user.wallet.balance}
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+</div>
 
+<script>
+setTimeout(function() {
+window.location.href = '/dashboard';
+}, 5000);
+</script>
 
-app.post('/fundwallet', isLoggedIn, async (req, res) => {
-  try {
-    const walletId = req.body.walletId;
-    var amount = req.body.amount;
-   
-    const user = await User.findOne({ 'wallet.id': walletId });
-    if (!user) {
-      req.flash('error', 'Invalid wallet id');
-      return res.redirect('/fundwallet');
+      `);
+    } catch (error) {
+      // res.json({ success: false, message: error });
+      res.redirect('/fundwallet');
     }
-    amount = Number(amount);
-    user.wallet.balance = parseFloat(user.wallet.balance) + amount;
-    console.log(`the new balance is ${user.wallet.balance}`);
-    user.wallet.isActive = true;
-    await user.save();
-
-    res.render('fundwallet', { message: 'Wallet funded successfully',user:req.user});
- 
-  } catch (error) {
-    res.render('fundwallet', { message: error,user:req.user});
-  }
-}
-);
-
+  });
+  
 
   // Dashboard route
 
@@ -614,7 +637,7 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
         if (err) {
           console.error(err);
           req.flash('error', err.message);
-          return res.redirect('/');
+          return res.redirect('/home');
         }
         // Render the dashboard page and pass the user's data to the template
         res.render('dashboard', { message: req.flash('error'), user: req.user, users: user,page : 1 });
@@ -622,7 +645,7 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
       });
     } else {
       // If the user is not logged in, redirect to the login page
-      res.redirect('/');
+      res.redirect('/home');
     }
   });
 
@@ -634,7 +657,7 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
       if (err) {
         console.error(err);
         req.flash('error', err.message);
-        return res.redirect('/');
+        return res.redirect('/home');
       }
       
       // If the user is logged in, save a logout event and redirect to the login page
@@ -679,7 +702,7 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
               </head>
               <div class="container mt-5">
   <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
-    You have signed out successfully.
+  You have signed out successfully.
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -687,10 +710,17 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
 </div>
 
 <script>
-  setTimeout(function() {
-    window.location.href = '/';
-  }, 5000);
+  var countDown = 5000 / 1000;  // convert milliseconds to seconds
+  var intervalId = setInterval(function() {
+    countDown--;
+    document.getElementsByClassName("alert")[0].innerHTML = "You have signed out successfully. Redirecting to homepage in " + countDown + " seconds." + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>';
+    if (countDown === 0) {
+      clearInterval(intervalId);
+      window.location.href = '/home';
+    }
+  }, 1000);
 </script>
+
 
                 `);
               } else {
@@ -869,14 +899,42 @@ app.post('/fundwallet', isLoggedIn, async (req, res) => {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/');
+    res.send(`
+                <head>
+                <!-- Bootstrap CSS -->
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+                <!-- Bootstrap JavaScript -->
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+              </head>
+              <div class="container mt-5">
+  <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  var countDown = 5000 / 1000;  // convert milliseconds to seconds
+  var intervalId = setInterval(function() {
+    countDown--;
+    document.getElementsByClassName("alert")[0].innerHTML = "You need to log in to continue. Redirecting you in " + countDown + " seconds." + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>';
+    if (countDown === 0) {
+      clearInterval(intervalId);
+      window.location.href = '/home';
+    }
+  }, 1000);
+</script>
+
+
+                `);
   }
   
   function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/');
+    res.redirect('/home');
   }
   
 // Start the server
